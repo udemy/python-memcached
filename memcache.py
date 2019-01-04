@@ -1090,7 +1090,7 @@ class Client(threading.local):
                 if not rkey:
                     return None
                 try:
-                    value = self._recv_value(server, flags, rlen)
+                    value = self._recv_value(server, flags, rlen, key=key)
                 finally:
                     server.expect(b"END", raise_exception=True)
             except (_Error, socket.error) as msg:
@@ -1243,7 +1243,7 @@ class Client(threading.local):
         else:
             return (None, None, None)
 
-    def _recv_value(self, server, flags, rlen):
+    def _recv_value(self, server, flags, rlen, key=None):
         rlen += 2  # include \r\n
         buf = server.recv(rlen)
         if len(buf) != rlen:
@@ -1276,7 +1276,7 @@ class Client(threading.local):
                     unpickler.persistent_load = self.persistent_load
                 val = unpickler.load()
             except Exception as e:
-                self.debuglog('Pickle error: %s\n' % e)
+                self.debuglog('Pickle error (key:[%s]): %s\n' % (key, e))
                 return None
         else:
             self.debuglog("unknown flags on get: %x\n" % flags)
