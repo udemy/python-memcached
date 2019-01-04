@@ -1,4 +1,8 @@
-Fri, 15 Dec 2018 09:02:05 -0700  Sean Reifschneider  <jafo00@gmail.com>
+Fri, 04 Jan 2019 15:33:33 -0800  Kevin Yang <kevin.yang@udemy.com>
+
+   *  Added key to the pickling debug message to propagate more info
+
+Fri, 15 Dec 2017 09:02:05 -0700  Sean Reifschneider  <jafo00@gmail.com>
 
    *  Added testing for Python 3.5 and 3.6 (PR from Tim Graham) #110, #131
 

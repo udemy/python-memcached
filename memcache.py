@@ -81,7 +81,7 @@ valid_key_chars_re = re.compile(b'[\x21-\x7e\x80-\xff]+$')
 
 #  Original author: Evan Martin of Danga Interactive
 __author__ = "Sean Reifschneider <jafo00@gmail.com>"
-__version__ = "1.59"
+__version__ = "1.59.ud1"
 __copyright__ = "Copyright (C) 2003 Danga Interactive"
 #  http://en.wikipedia.org/wiki/Python_Software_Foundation_License
 __license__ = "Python Software Foundation License"
@@ -1090,7 +1090,7 @@ class Client(threading.local):
                 if not rkey:
                     return None
                 try:
-                    value = self._recv_value(server, flags, rlen)
+                    value = self._recv_value(server, flags, rlen, key=key)
                 finally:
                     server.expect(b"END", raise_exception=True)
             except (_Error, socket.error) as msg:
@@ -1243,7 +1243,7 @@ class Client(threading.local):
         else:
             return (None, None, None)
 
-    def _recv_value(self, server, flags, rlen):
+    def _recv_value(self, server, flags, rlen, key=None):
         rlen += 2  # include \r\n
         buf = server.recv(rlen)
         if len(buf) != rlen:
@@ -1276,7 +1276,7 @@ class Client(threading.local):
                     unpickler.persistent_load = self.persistent_load
                 val = unpickler.load()
             except Exception as e:
-                self.debuglog('Pickle error: %s\n' % e)
+                self.debuglog('Pickle error (key:[%s]): %s\n' % (key, e))
                 return None
         else:
             self.debuglog("unknown flags on get: %x\n" % flags)
